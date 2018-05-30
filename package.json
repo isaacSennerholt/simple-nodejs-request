@@ -1,0 +1,17 @@
+{
+  "name": "simple-nodejs-request",
+  "version": "1.0.0",
+  "description": "Simple nodejs http/https request utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jest",
+    "test-unit-all": "npm run test -- unit"
+  },
+  "repository": "git://github.com/isaacSennerholt/simple-nodejs-request.git",
+  "keywords": ["http", "https", "nodejs", "request", "http request", "simple request"],
+  "author": "isaacsennerholt <isaac.sennerholt@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "20.0.4"
+  }
+}
