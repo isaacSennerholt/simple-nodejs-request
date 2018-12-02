@@ -1,47 +1,52 @@
-const URL = require('url')
+const URL = require("url");
 
-module.exports = (url, {method, headers, body}) => {
-
+module.exports = (url, { method, headers, body }) => {
   return new Promise((resolve, reject) => {
-    const jsonBody = JSON.stringify(body) || null
-    const {protocol, hostname, port, path} = URL.parse(url)
-    const protocolModule = require(`${protocol ? protocol.replace(':','') : 'http'}`)
+    const jsonBody = JSON.stringify(body) || null;
+    const { protocol, hostname, port, path } = URL.parse(url);
+    const protocolModule = require(`${
+      protocol ? protocol.replace(":", "") : "http"
+    }`);
     const httpOptions = {
       hostname,
       port,
       path,
-      method: method ? method.toUpperCase() : 'GET',
+      method: method ? method.toUpperCase() : "GET",
       headers: {
         ...headers,
-        'content-type': 'application/json',
-        'content-length': Buffer.byteLength(jsonBody),
-        'accept': 'application/json'
+        ...(jsonBody && { "content-length": Buffer.byteLength(jsonBody) }),
+        "content-type": "application/json",
+        accept: "application/json"
       }
-    }
+    };
 
-    let responseBody = ''
+    let responseBody = "";
     const request = protocolModule.request(httpOptions, response => {
-      const {statusCode} = response
-      response.setEncoding('utf8')
-      response.on('data', chunk => responseBody += chunk)
-      response.on('end', () => {
-        let parsedResponseBody
+      const { statusCode } = response;
+      response.setEncoding("utf8");
+      response.on("data", chunk => (responseBody += chunk));
+      response.on("end", () => {
+        let parsedResponseBody;
         try {
-          parsedResponseBody = JSON.parse(responseBody)
+          parsedResponseBody = JSON.parse(responseBody);
         } catch (error) {
-          parsedResponseBody = {}
+          parsedResponseBody = {};
         }
-        resolve({status: statusCode, body: parsedResponseBody})
-      })
-    })
+        resolve({ status: statusCode, body: parsedResponseBody });
+      });
+    });
 
-    request.on('error', error => reject(error))
+    request.on("error", error => reject(error));
 
-    if (method === 'POST' || method === 'PUT' || method === 'DELETE' || method === 'PATCH') {
-      request.write(jsonBody)
+    if (
+      method === "POST" ||
+      method === "PUT" ||
+      method === "DELETE" ||
+      method === "PATCH"
+    ) {
+      request.write(jsonBody);
     }
 
-    request.end()
-  })
-  
-}
+    request.end();
+  });
+};
