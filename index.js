@@ -41,7 +41,6 @@ module.exports = (url, { method, headers, body }) => {
     if (
       method === "POST" ||
       method === "PUT" ||
-      method === "DELETE" ||
       method === "PATCH"
     ) {
       request.write(jsonBody);
